@@ -34,12 +34,12 @@ func main() {
 
 	//query user
 
-	sqlStatement := `SELECT id, phone FROM identity WHERE customer_id=$1;`
+	sqlStatement := `SELECT customer_id, phone FROM customer.identity WHERE is_actived=$1;`
 	var phone string
 	var id int
 	// Replace 3 with an ID from your database or another random
 	// value to test the no rows use case.
-	row := db.QueryRow(sqlStatement, 189266449)
+	row := db.QueryRow(sqlStatement, true)
 	switch err := row.Scan(&id, &phone); err {
 	case sql.ErrNoRows:
 		fmt.Println("No rows were returned!")
@@ -48,4 +48,28 @@ func main() {
 	default:
 		panic(err)
 	}
+
+	//query multiple rows
+
+	rows, err := db.Query(sqlStatement, true)
+
+	if err != nil {
+		panic(err)
+	}
+
+	for rows.Next() {
+		var customerId int
+		var phoneNumber string
+		err = rows.Scan(&customerId, &phoneNumber)
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println(customerId, phoneNumber)
+	}
+
+	err = rows.Err()
+	if err != nil {
+		panic(err)
+	}
+
 }
