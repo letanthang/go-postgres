@@ -35,9 +35,6 @@ spec:
         envFrom:
         - configMapRef:
             name: env-env
-        env:
-        - name: DATABASE__HOST
-          value: 10.148.0.2
         resources:
           requests:
             memory: "50Mi"
@@ -45,60 +42,3 @@ spec:
           limits:
             memory: "60Mi"
             cpu: "70m"
-# ---
-# apiVersion: autoscaling/v2beta1
-# kind: HorizontalPodAutoscaler
-# metadata:
-#   name: thanglab-APP_NAME
-# spec:
-#   scaleTargetRef:
-#     apiVersion: extensions/v1beta1
-#     kind: Deployment
-#     name: thanglab-APP_NAME
-#   minReplicas: 1
-#   maxReplicas: 3
-#   metrics:
-#   - type: Resource
-#     resource:
-#       name: cpu
-#       targetAverageUtilization: 80
-#   - type: Resource
-#     resource:
-#       name: memory
-#       targetAverageValue: 512Mi
----
-kind: Service
-apiVersion: v1
-metadata:
-  name: thanglab-APP_NAME
-  labels:
-    app: thanglab-APP_NAME
-spec:
-  selector:
-    app: thanglab-APP_NAME
-  type: NodePort # NodePort|LoadBalancer|ExternalName Test kong ingress
-  ports:
-  ####### Kong Ingress
-  - port: 9091
-    targetPort: 3000
-    protocol: TCP
-    name: thanglab-APP_NAME
----
-# Kong Ingress
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: thanglab-APP_NAME
-  labels:
-    app: thanglab-APP_NAME
-  annotations:
-    kubernetes.io/ingress.class: kong
-spec:
-  rules:
-    - host: foreachtech.tk
-      http:
-        paths:
-          - path: "/api"
-            backend:
-              serviceName: thanglab-APP_NAME
-              servicePort: 9091
