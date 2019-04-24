@@ -4,20 +4,13 @@ import (
 	"database/sql"
 	"fmt"
 
+	"github.com/go-postgres/config"
 	_ "github.com/lib/pq"
-)
-
-const (
-	host     = "localhost"
-	port     = 5432
-	user     = "postgres"
-	password = "docker"
-	dbname   = "postgres"
 )
 
 func main() {
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
-		host, port, user, password, dbname)
+		config.Config.Db.Host, 5432, config.Config.Db.User, config.Config.Db.Password, config.Config.Db.Name)
 
 	db, err := sql.Open("postgres", psqlInfo)
 	if err != nil {
@@ -34,12 +27,12 @@ func main() {
 
 	//query user
 
-	sqlStatement := `SELECT customer_id, phone FROM customer.identity WHERE is_actived=$1;`
+	sqlStatement := `SELECT id, phone FROM identity WHERE id<$1;`
 	var phone string
 	var id int
 	// Replace 3 with an ID from your database or another random
 	// value to test the no rows use case.
-	row := db.QueryRow(sqlStatement, true)
+	row := db.QueryRow(sqlStatement, 100)
 	switch err := row.Scan(&id, &phone); err {
 	case sql.ErrNoRows:
 		fmt.Println("No rows were returned!")
@@ -51,7 +44,7 @@ func main() {
 
 	//query multiple rows
 
-	rows, err := db.Query(sqlStatement, true)
+	rows, err := db.Query(sqlStatement, 100)
 
 	if err != nil {
 		panic(err)
