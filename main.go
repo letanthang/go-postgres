@@ -9,17 +9,20 @@ import (
 )
 
 func main() {
+	fmt.Println("Start db connection")
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
 		config.Config.Db.Host, 5432, config.Config.Db.User, config.Config.Db.Password, config.Config.Db.Name)
 
 	db, err := sql.Open("postgres", psqlInfo)
 	if err != nil {
+		fmt.Println("Fail to connect.")
 		panic(err)
 	}
 	defer db.Close()
 
 	err = db.Ping()
 	if err != nil {
+		fmt.Println("Fail to ping.")
 		panic(err)
 	}
 
