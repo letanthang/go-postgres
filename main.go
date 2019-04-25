@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"sync"
+	"time"
 
 	"github.com/go-postgres/config"
 	_ "github.com/lib/pq"
@@ -25,9 +26,10 @@ func init() {
 		fmt.Println("Fail to connect.")
 		panic(err)
 	}
-	defer db.Close()
+	// defer db.Close()
 	db.SetMaxIdleConns(20)
 	db.SetMaxOpenConns(100)
+	db.SetConnMaxLifetime(3600 * time.Second)
 	err = db.Ping()
 	if err != nil {
 		fmt.Println("Fail to ping.")
@@ -48,12 +50,13 @@ func new() *sql.DB {
 		fmt.Println("Fail to connect.")
 		panic(err)
 	}
-	defer db.Close()
+	// defer db.Close()
 
 	// db.DB().SetMaxIdleConns(20)
 	// db.DB().SetMaxOpenConns(100)
 	db.SetMaxIdleConns(20)
 	db.SetMaxOpenConns(100)
+	db.SetConnMaxLifetime(3600 * time.Second)
 	err = db.Ping()
 	if err != nil {
 		fmt.Println("Fail to ping.")
