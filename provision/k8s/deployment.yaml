@@ -42,3 +42,21 @@ spec:
           limits:
             memory: "60Mi"
             cpu: "70m"
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: thanglab-APP_NAME
+  labels:
+    app: thanglab-APP_NAME
+spec:
+  selector:
+    app: thanglab-APP_NAME
+  type: NodePort # NodePort|LoadBalancer|ExternalName Test kong ingress
+  ports:
+  ####### Kong Ingress
+  - port: 9091
+    targetPort: 9090
+    protocol: TCP
+    name: thanglab-APP_NAME
+---

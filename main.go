@@ -17,7 +17,7 @@ var (
 )
 
 func init() {
-	fmt.Println("Start db connection")
+	fmt.Printf("Start db connection1. db host: %s | db name: %s \n", config.Config.Db.Host, config.Config.Db.Name)
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
 		config.Config.Db.Host, 5432, config.Config.Db.User, config.Config.Db.Password, config.Config.Db.Name)
 
@@ -41,7 +41,7 @@ func init() {
 }
 
 func new() *sql.DB {
-	fmt.Println("Start db connection")
+	fmt.Printf("Start db connection2. db host: %s | db name: %s \n", config.Config.Db.Host, config.Config.Db.Name)
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
 		config.Config.Db.Host, 5432, config.Config.Db.User, config.Config.Db.Password, config.Config.Db.Name)
 
